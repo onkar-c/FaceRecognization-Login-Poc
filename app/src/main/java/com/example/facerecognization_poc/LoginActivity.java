@@ -9,39 +9,61 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import static com.example.facerecognization_poc.ProjectConstants.HEIGHT;
+import static com.example.facerecognization_poc.ProjectConstants.WIDTH;
+import static com.example.facerecognization_poc.ProjectConstants.classifier;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button train, login, reset;
-    private Classifier classifier;
+    Button train, login;
     private static final int TRAIN = 1;
     private static final int LOGIN = 3;
-    private static final int FACE_SIZE = 160;
-    private static final int WIDTH = 500;
-    private static final int HEIGHT = 500;
+    private ArrayList<TrainingData> trainingData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         new CoreSharedHelper(this);
+        resetData();
         train = findViewById(R.id.train);
         login = findViewById(R.id.login);
-        reset = findViewById(R.id.reset);
         train.setOnClickListener(this);
         login.setOnClickListener(this);
-        reset.setOnClickListener(this);
-        ((TextView)findViewById(R.id.result)).setText("");
-        try {
-            classifier = Classifier.getInstance(getAssets(), FACE_SIZE, FACE_SIZE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+    }
+
+    private void resetData() {
+        trainingData = new Gson().fromJson(CoreSharedHelper.getInstance().getTrainingData(), new TypeToken<List<TrainingData>>() {
+        }.getType());
+
+        findViewById(R.id.instruction).setVisibility((trainingData == null || trainingData.size() == 0) ? View.VISIBLE : View.GONE);
+
+    }
+
+    private void clearTrainingDataConformation() {
+        new AlertDialog.Builder(this)
+                .setMessage("Your previous trained data will be cleared. \n Are you sure you want to clear it?")
+                .setPositiveButton("Yes", (arg0, arg1) -> {
+                    arg0.dismiss();
+                    CoreSharedHelper.getInstance().saveTrainingData("");
+                    performFileSearch(TRAIN);
+                })
+                .setNegativeButton("No", (arg0, arg1) -> arg0.dismiss())
+                .show();
     }
 
     @Override
@@ -49,19 +71,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.train:
-                CoreSharedHelper.getInstance().saveTrainingData("");
-                performFileSearch(TRAIN);
+                clearTrainingDataConformation();
                 break;
 
             case R.id.login:
 //                takePhoto();
-                ((TextView)findViewById(R.id.result)).setText("");
-                startActivityForResult( new Intent(this, CameraView.class), LOGIN);
-                break;
-
-            case R.id.reset:
-                CoreSharedHelper.getInstance().saveTrainingData("");
-                ((TextView)findViewById(R.id.result)).setText("");
+                ((TextView) findViewById(R.id.result)).setText("");
+                if (trainingData == null || trainingData.size() == 0)
+                    Toast.makeText(this, "please provide training data", Toast.LENGTH_SHORT).show();
+                else {
+                    ((TextView) findViewById(R.id.result)).setText("");
+                    startActivityForResult(new Intent(this, CameraView.class), LOGIN);
+                }
                 break;
         }
 
@@ -72,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (resultCode == RESULT_OK && requestCode == TRAIN) {
             ClipData clipData = data.getClipData();
-            if(clipData != null && clipData.getItemCount() > 0) {
+            if (clipData != null && clipData.getItemCount() > 0) {
                 for (int i = 0; i < Objects.requireNonNull(clipData).getItemCount(); i++) {
                     try {
                         classifier.trainModel(getBitmapFromUri(clipData.getItemAt(i).getUri()));
@@ -80,10 +101,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         e.printStackTrace();
                     }
                 }
+                resetData();
             }
-        } else  if (resultCode == RESULT_OK && requestCode == LOGIN) {
-            ((TextView)findViewById(R.id.result)).setText(data.getStringExtra("result"));
+        } else if (resultCode == RESULT_OK && requestCode == LOGIN) {
+            ((TextView) findViewById(R.id.result)).setText(data.getStringExtra("result"));
         }
+
 //        else if (resultCode == RESULT_OK && requestCode == 2) {
 //            Bundle extras = data.getExtras();
 //            Bitmap imageBitmap = (Bitmap) Objects.requireNonNull(extras).get("data");

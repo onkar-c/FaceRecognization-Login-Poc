@@ -40,13 +40,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.facerecognization_poc.ProjectConstants.FACE_SIZE;
+import static com.example.facerecognization_poc.ProjectConstants.HEIGHT;
+import static com.example.facerecognization_poc.ProjectConstants.WIDTH;
+
 public class CameraView extends AppCompatActivity {
 
     private static final String TAG = "AndroidCameraApi";
-
-    private static final int FACE_SIZE = 160;
-    private static final int WIDTH = 500;
-    private static final int HEIGHT = 500;
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -121,7 +121,7 @@ public class CameraView extends AppCompatActivity {
     };
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
-        public void onOpened(CameraDevice camera) {
+        public void onOpened( CameraDevice camera) {
             //This is called when the camera is open
             Log.e(TAG, "onOpened");
             cameraDevice = camera;
@@ -171,7 +171,7 @@ public class CameraView extends AppCompatActivity {
                 height = jpegSizes[0].getHeight();
             }
             ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
-            List<Surface> outputSurfaces = new ArrayList<Surface>(2);
+            List<Surface> outputSurfaces = new ArrayList<>(2);
             outputSurfaces.add(reader.getSurface());
             outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
@@ -261,14 +261,12 @@ public class CameraView extends AppCompatActivity {
                     if(imageBitmap == null ) takePicture();
                     else if(count < 5) {
                         if (classifier.recognizeImage(Bitmap.createScaledBitmap(imageBitmap, WIDTH, HEIGHT, true))) {
-//                            Toast.makeText(context, "match", Toast.LENGTH_SHORT).show();
                             closeCamera();
-                            setResult("Login sucessfull");
+                            setResult("Login successful");
 
                         }else
                             takePicture();
                     } else {
-//                        Toast.makeText(context, "Not a match", Toast.LENGTH_SHORT).show();
                         closeCamera();
                         setResult("Login failed");
                     }

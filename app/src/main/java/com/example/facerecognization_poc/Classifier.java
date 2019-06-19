@@ -67,13 +67,14 @@ public class Classifier {
                 int count = 0;
                 ArrayList<TrainingData> trainingData = new Gson().fromJson(CoreSharedHelper.getInstance().getTrainingData(), new TypeToken<List<TrainingData>>() {
                 }.getType());
-                for (TrainingData t : trainingData) {
-                    if (distance(t.emb_array, td.emb_array) < 0.9) count++;
-                }
-
-                if (count >= trainingData.size() / 2)
-                    return true;
-
+                if(trainingData != null && trainingData.size() > 0) {
+                    for (TrainingData t : trainingData) {
+                        if (distance(t.emb_array, td.emb_array) < 0.9) count++;
+                    }
+                    if (count >= trainingData.size() / 2)
+                        return true;
+                } else
+                    return false;
         }
         return false;
     }
