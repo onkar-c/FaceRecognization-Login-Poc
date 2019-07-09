@@ -18,3 +18,7 @@ The project uses following tools.
 <p align="center">
   <img src="comparision_result2.png" width=250 height=400>
 </p> 
+
+
+## Related blog post
+You can find medium blog post [here.](https://medium.com/@NitorInfotech/offline-face-detection-comparison-for-the-insurance-domain-using-facenet-7dd9a492f25f)
