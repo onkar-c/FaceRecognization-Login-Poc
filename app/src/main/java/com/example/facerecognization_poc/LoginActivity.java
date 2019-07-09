@@ -25,6 +25,9 @@ import java.util.Objects;
 import static com.example.facerecognization_poc.ProjectConstants.HEIGHT;
 import static com.example.facerecognization_poc.ProjectConstants.WIDTH;
 import static com.example.facerecognization_poc.ProjectConstants.classifier;
+/**
+ * Created by Onkar Chopade
+ */
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -46,6 +49,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+
+    /**
+     * removes all training data
+     */
     private void resetData() {
         trainingData = new Gson().fromJson(CoreSharedHelper.getInstance().getTrainingData(), new TypeToken<List<TrainingData>>() {
         }.getType());
@@ -118,6 +125,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //        }
     }
 
+    /**
+     * fetches bitmap image from given uri
+     * @param uri image uri
+     * @return extracted bitmap image
+     */
     public Bitmap getBitmapFromUri(Uri uri) {
         Bitmap bitmap = null;
         try {
@@ -135,6 +147,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //    }
 
 
+    /**
+     * Starts image picker
+     * @param requestCode integer code
+     */
     public void performFileSearch(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);

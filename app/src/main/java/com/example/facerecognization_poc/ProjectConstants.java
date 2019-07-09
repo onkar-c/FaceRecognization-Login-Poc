@@ -1,5 +1,8 @@
 package com.example.facerecognization_poc;
 
+/**
+ * Created by Onkar Chopade
+ */
 class ProjectConstants {
     static Classifier classifier;
     static final int FACE_SIZE = 160;

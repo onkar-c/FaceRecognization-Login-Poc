@@ -44,6 +44,10 @@ import static com.example.facerecognization_poc.ProjectConstants.FACE_SIZE;
 import static com.example.facerecognization_poc.ProjectConstants.HEIGHT;
 import static com.example.facerecognization_poc.ProjectConstants.WIDTH;
 
+/**
+ * Created by Onkar Chopade
+ */
+
 public class CameraView extends AppCompatActivity {
 
     private static final String TAG = "AndroidCameraApi";
@@ -74,12 +78,6 @@ public class CameraView extends AppCompatActivity {
     Intent returnIntent = new Intent();
 
 
-//    protected CaptureRequest captureRequest;
-//    private boolean mFlashSupported;
-//    private File file;
-//    private Button takePictureButton;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,8 +85,6 @@ public class CameraView extends AppCompatActivity {
         textureView =  findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-//        takePictureButton =  findViewById(R.id.btn_takepicture);
-//        assert takePictureButton != null;
         context = this;
 
         try {
@@ -97,7 +93,6 @@ public class CameraView extends AppCompatActivity {
             e.printStackTrace();
         }
 
-//        takePictureButton.setOnClickListener(v -> this.takePicture());
         count = 0;
     }
 
@@ -199,24 +194,12 @@ public class CameraView extends AppCompatActivity {
                         image.close();
                     }
                 }
-            /* private void save(byte[] bytes) throws IOException {
-             OutputStream output = null;
-             try {
-                 output = new FileOutputStream(file);
-                 output.write(bytes);
-             } finally {
-                 if (null != output) {
-                     output.close();
-                 }
-             }
-         }*/
             };
             reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
             final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-//                    Toast.makeText(CameraView.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
                 }
 
@@ -360,7 +343,6 @@ public class CameraView extends AppCompatActivity {
     @Override
     protected void onPause() {
         Log.e(TAG, "onPause");
-        //closeCamera();
         stopBackgroundThread();
         super.onPause();
     }

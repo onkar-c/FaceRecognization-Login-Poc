@@ -8,6 +8,10 @@ import android.view.View;
 
 import static com.example.facerecognization_poc.ProjectConstants.FACE_SIZE;
 
+/**
+ * Created by Onkar Chopade
+ */
+
 public class DashBoardActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
@@ -49,6 +53,5 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                 startActivity(new Intent(DashBoardActivity.this,LoginActivity.class));
                 break;
         }
-
     }
 }

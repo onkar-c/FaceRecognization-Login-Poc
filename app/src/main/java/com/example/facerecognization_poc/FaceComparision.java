@@ -20,7 +20,9 @@ import static com.example.facerecognization_poc.ProjectConstants.HEIGHT;
 import static com.example.facerecognization_poc.ProjectConstants.WIDTH;
 import static com.example.facerecognization_poc.ProjectConstants.classifier;
 
-
+/**
+ * Created by Onkar Chopade
+ */
 public class FaceComparision extends AppCompatActivity implements View.OnClickListener {
     ImageView image1, image2;
     Button compare;

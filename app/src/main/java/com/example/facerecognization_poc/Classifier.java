@@ -57,6 +57,13 @@ public class Classifier {
         return classifier;
     }
 
+    /**
+     * Used to check if the given image matches the trained data.
+     * input image vectors are obtained and distance between that vectors and trained vectors are checked.
+     * if threshold value < 0.9 for more than 50% of training data then it is a match or else not a match
+     * @param bitmap input image to be checked
+     * @return match or not a match
+     */
     boolean recognizeImage(Bitmap bitmap) {
         synchronized (this) {
 
@@ -79,6 +86,11 @@ public class Classifier {
         return false;
     }
 
+
+    /**
+     * Used to train the model for face login
+     * @param bitmap input image
+     */
     void trainModel(Bitmap bitmap) {
         Rect rect = getRect(bitmap);
         TrainingData td = new TrainingData();
@@ -93,7 +105,11 @@ public class Classifier {
         CoreSharedHelper.getInstance().saveTrainingData(new Gson().toJson(trainingData));
     }
 
-
+    /**
+     * calculate 512 vectors of the face in given image
+     * @param bitmap input image
+     * @return 512 vectors
+     */
     float[] getDistance(Bitmap bitmap) {
         Rect rect = getRect(bitmap);
         float[] emb_array = new float[EMBEDDING_SIZE];
@@ -101,6 +117,11 @@ public class Classifier {
         return emb_array;
     }
 
+    /**
+     * This function detects the face from image and returns the rectangular box.
+     * @param bitmap input image
+     * @return Rectangular box
+     */
     private Rect getRect(Bitmap bitmap){
         Pair[] faces = mtcnn.detect(bitmap);
         Rect rect = new Rect();
@@ -116,16 +137,21 @@ public class Classifier {
         return rect;
     }
 
-
-    float distance(float[] array1, float[] array2) {
+    /**
+     * calculate the distance between all the vectors and return threshold value for the same
+     * @param vectorsArray1 512 vectors of image 1
+     * @param vectorsArray2 512 vectors of image 2
+     * @return returns the threshold value between 2 vector arrays.
+     */
+    float distance(float[] vectorsArray1, float[] vectorsArray2) {
         float[] sub = new float[512];
-        float sum = 0;
-        for (int i = 0; i < array1.length; i++) {
-            sub[i] = array1[i] - array2[i];
+        float threshold = 0;
+        for (int i = 0; i < vectorsArray1.length; i++) {
+            sub[i] = vectorsArray1[i] - vectorsArray2[i];
             sub[i] *= sub[i];
-            sum += sub[i];
+            threshold += sub[i];
         }
-        Log.d("distance", "" + sum);
-        return sum;
+        Log.d("distance", "" + threshold);
+        return threshold;
     }
 }

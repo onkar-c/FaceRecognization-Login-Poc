@@ -3,6 +3,10 @@ package com.example.facerecognization_poc;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+
+/**
+ * Created by Onkar Chopade
+ */
 public class CoreSharedHelper {
     private static CoreSharedHelper instance;
     private final SharedPreferences sharedPreferences;
@@ -26,7 +30,7 @@ public class CoreSharedHelper {
         }
     }
 
-    protected void savePref(String key, Object value) {
+    private void savePref(String key, Object value) {
         SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
         // delete(key);
 
